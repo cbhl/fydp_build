@@ -1,5 +1,6 @@
 import json
 import multiprocessing
+import os
 import select
 import subprocess
 
@@ -18,6 +19,7 @@ def hello():
     return json.dumps(log)
 
 def build(queue):
+    os.chdir("/home/cryptkeeper/src")
     popen = subprocess.Popen("git clone git://github.com/zmanji/ecryptfs.git",
                              shell=True, bufsize=4096, stdin=None,
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,

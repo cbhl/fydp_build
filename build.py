@@ -13,7 +13,10 @@ log = []
 
 @app.route("/")
 def hello():
-    while line = queue.get(False):
+    while True:
+        line = queue.get(False)
+        if line is None or line == "":
+          break;
         log.append(line)
     log = log[-100:]
     return json.dumps(log)
@@ -26,7 +29,11 @@ def build(queue):
                              close_fds=True)
     while True:
         result = select.select([popen.stdout],[],[])
+        if not len(result[0]):
+            break;
         line = result[0][0].readline()
+        if not line:
+            break;
         queue.put(line)
 
 if __name__ == "__main__":
@@ -35,6 +42,6 @@ if __name__ == "__main__":
 
     process.start()
 
-    app.run()
+    app.run(host='::0',port="20349")
 
     process.join()

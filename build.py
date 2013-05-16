@@ -35,6 +35,8 @@ def build():
 
 if __name__ == "__main__":
     logging.basicConfig(filename='build.log',level=logging.DEBUG)
+    console = logging.StreamHandler()
+    logging.getLogger('').addHandler(console)
 
     process = multiprocessing.Process(target=build, args=())
 

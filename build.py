@@ -42,6 +42,6 @@ if __name__ == "__main__":
 
     process.start()
 
-    app.run(host='::0',port="20349")
+    app.run(host='::0',port=20349)
 
     process.join()

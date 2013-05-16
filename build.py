@@ -19,19 +19,19 @@ def hello():
     return json.dumps(log)
 
 def build():
+    logging.info("Starting build!")
     os.chdir("/home/cryptkeeper/src")
     popen = subprocess.Popen("git clone git://github.com/zmanji/ecryptfs.git",
                              shell=True, bufsize=4096, stdin=None,
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                              close_fds=True)
     while True:
-        result = select.select([popen.stdout],[],[])
-        if not len(result[0]):
-            break;
-        line = result[0][0].readline()
+        line = popen.stdout.readline()
         if not line:
+            logging.info("if not line")
             break;
         logging.info(line)
+    logging.info("Build complete!")
 
 if __name__ == "__main__":
     logging.basicConfig(filename='build.log',level=logging.DEBUG)

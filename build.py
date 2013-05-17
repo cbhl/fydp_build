@@ -23,18 +23,24 @@ def build():
     dt = datetime.datetime.today()
     revision = "cryptkeeper%04d%02d%02d" % (dt.year, dt.month, dt.day)
     commands = [
-        ["/home/cryptkeeper/src",
-            "git clone git://github.com/zmanji/ecryptfs.git"],
-        ["/home/cryptkeeper/src",
-            "git clone git://github.com/zmanji/ecryptfs_userspace.git"],
+#        ["/home/cryptkeeper/src",
+#            "git clone git://github.com/zmanji/ecryptfs.git"],
+#        ["/home/cryptkeeper/src",
+#            "git clone git://github.com/zmanji/ecryptfs_userspace.git"],
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "git pull"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make oldconfig"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",
             "fakeroot make-kpkg --initrd --revision=%s kernel_image" % revision],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "pwd"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git pull"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "fakeroot debian/rules binary"],
     ]

@@ -31,7 +31,7 @@ $(function() {
             dataType: "json",
             url: "/log.json"
         }).then(displayLog, logAjaxError).then(function() {
-            window.setTimeout(updateLog, 1000);
+            window.setTimeout(updateLog, 10000);
         });
     };
 

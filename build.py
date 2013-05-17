@@ -32,7 +32,7 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "git pull"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "make oldconfig"],
+            "yes '' | make oldconfig"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",

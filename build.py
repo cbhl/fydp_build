@@ -17,7 +17,7 @@ log = []
 def build_log():
     f = open("build.log", "r")
     log = f.readlines()
-    return json.dumps(log)
+    return json.dumps(log[-100:])
 
 @app.route("/")
 def hello():

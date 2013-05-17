@@ -19,7 +19,7 @@ $(function() {
             height: $(window).height() -100,
             overflow: 'scroll'
         });
-        $logDiv.animate({ scrollTop: $logContentDiv.scrollHeight}, 1000);
+        $logDiv.animate({ scrollTop: $logContentDiv.height()}, 500);
     };
 
     var logAjaxError = function(jqXHR, textStatus) {

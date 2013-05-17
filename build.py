@@ -20,6 +20,7 @@ def build_log():
     return json.dumps(log)
 
 @app.route("/")
+def hello():
     return render_template("index.html")
 
 def build():

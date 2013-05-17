@@ -6,17 +6,21 @@ import os
 import subprocess
 
 from flask import Flask
+from flask import render_template
 app = Flask(__name__)
 
 process = None
 queue = None
 log = []
 
-@app.route("/")
-def hello():
+@app.route("/log.json")
+def build_log():
     f = open("build.log", "r")
     log = f.readlines()
     return json.dumps(log)
+
+@app.route("/")
+    return render_template("index.html")
 
 def build():
     logging.info("Starting build!")

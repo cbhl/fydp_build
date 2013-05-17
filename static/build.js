@@ -1,13 +1,15 @@
 $(function() {
     var $logDiv = $('<div class="log">');
+    var $logContentDiv = $('<div class="log-content">');
+    $logDiv.append($logContentDiv);
     $("body").append($logDiv);
 
     var displayLog = function(data) {
-        $logDiv.empty();
+        $logContentDiv.empty();
         _.each(data, function(line) {
             $lineDiv = $('<div class="log-line">');
             $lineDiv.text(line);
-            $logDiv.append($lineDiv);
+            $logContentDiv.append($lineDiv);
         });
         $logDiv.css({
             position:'absolute',

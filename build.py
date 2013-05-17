@@ -20,7 +20,7 @@ def hello():
 
 def build():
     logging.info("Starting build!")
-    dt = datetime.today()
+    dt = datetime.datetime.today()
     revision = "cryptkeeper%04d%02d%02d" % (dt.year, dt.month, dt.day)
     commands = [
         ["/home/cryptkeeper/src",

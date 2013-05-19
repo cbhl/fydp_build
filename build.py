@@ -47,7 +47,13 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git pull"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "fakeroot debian/rules binary"],
+            "debian/rules clean"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "debian/rules build"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git-dch --snapshot"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git-buildpackage"],
     ]
     for command in commands:
         logging.info("CHDIR: %s" % command[0])

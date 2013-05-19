@@ -21,6 +21,8 @@ def build_log_stream():
     log = f.readlines()
     log_len = len(log)
     last_line = int(request.headers['Last-Event-ID']) if 'Last-Event-ID' in request.headers else -1
+    if (log_len - last_line) > 300:
+        last_line = log_len-300;
     resp_str = ""
     if (last_line >= (log_len + 1)):
          resp_str = "\n"

@@ -28,7 +28,9 @@ def build_log_stream():
          resp_str = "\n"
     else:
         for n in range(last_line+1,log_len):
-            resp_str += "event: buildlog\nid: %d\ndata: %s\n\n" % (n, log[n].rstrip())
+            # TODO(cbhl): filter out werkzeug events at the logger level
+            if not "INFO:werkzeug:" in log[n]:
+                resp_str += "event: buildlog\nid: %d\ndata: %s\n\n" % (n, log[n].rstrip())
     response = make_response(resp_str)
     response.headers['Content-Type'] = 'text/event-stream'
     return response

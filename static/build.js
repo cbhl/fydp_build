@@ -26,8 +26,6 @@ $(function() {
             console.log(e.data);
         });
         source.addEventListener('buildlog', function(e) {
-            console.log("INFO: Got buildlog message event.");
-            console.log(e);
             $lineDiv = $('<div class="log-line">');
             $lineDiv.text(e.data);
             $logContentDiv.append($lineDiv);

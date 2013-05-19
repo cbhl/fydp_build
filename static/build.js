@@ -4,13 +4,7 @@ $(function() {
     $logDiv.append($logContentDiv);
     $("body").append($logDiv);
 
-    var displayLog = function(data) {
-        $logContentDiv.empty();
-        _.each(data, function(line) {
-            $lineDiv = $('<div class="log-line">');
-            $lineDiv.text(line);
-            $logContentDiv.append($lineDiv);
-        });
+    var resizeLog = function() {
         $logDiv.css({
             position:'absolute',
             left: 50,
@@ -19,21 +13,38 @@ $(function() {
             height: $(window).height() -100,
             overflow: 'scroll'
         });
-        $logDiv.animate({ scrollTop: $logContentDiv.height()}, 500);
-    };
+    }
 
-    var logAjaxError = function(jqXHR, textStatus) {
-        console.log("ERROR: " + textStatus);
-    };
+    resizeLog();
+    $.on("resize", resizeLog);
 
-    var updateLog = function() {
-        $.ajax({
-            dataType: "json",
-            url: "/log.json"
-        }).then(displayLog, logAjaxError).then(function() {
-            window.setTimeout(updateLog, 10000);
+    if (!!window.EventSource) {
+        var source = new EventSource("/build_log_stream");
+        source.addEventListener('message', function(e) {
+            console.log("ERROR: Got unexpected message event.");
+            console.log(e);
+            console.log(e.data);
         });
-    };
-
-    updateLog();
+        source.addEventListener('buildlog', function(e) {
+            console.log("INFO: Got buildlog message event.");
+            console.log(e);
+            $lineDiv = $('<div class="log-line">');
+            $lineDiv.text(e.data);
+            $logContentDiv.append($lineDiv);
+            $logDiv.animate({scrollTop: $logContentDiv.height()}, 500);
+        });
+        source.addEventListener('open', function(e) {
+            console.log("INFO: Connection was opened.");
+        });
+        source.addEventListener('error', function(e) {
+            if (e.readyState == EventSource.CLOSED) {
+                console.log("INFO: Connection was closed.");
+            }else{
+                console.log("ERROR: EventSource reported an error.");
+                console.log(e);
+            }
+        });
+    }else{
+        console.log("ERROR: EventSource isn't available.")
+    }
 });

@@ -6,6 +6,8 @@ import os
 import subprocess
 
 from flask import Flask
+from flask import make_response
+from flask import request
 from flask import render_template
 app = Flask(__name__)
 
@@ -13,11 +15,21 @@ process = None
 queue = None
 log = []
 
-@app.route("/log.json")
-def build_log():
+@app.route("/build_log_stream")
+def build_log_stream():
     f = open("build.log", "r")
     log = f.readlines()
-    return json.dumps(log[-100:])
+    log_len = len(log)
+    last_line = int(request['Last-Event-ID']) if 'Last-Event-ID' in request else -1
+    resp_str = ""
+    if (last_line >= (log_len + 1)):
+         resp_str = "\n"
+    else:
+        for n in range(last_line+1,log_len):
+            resp_str += "event: buildlog\nid: %d\ndata: %s\n" % (n, log[n])
+    response = make_response(resp_str)
+    response.headers['Content-Type'] = 'text/event-stream'
+    return response
 
 @app.route("/")
 def hello():

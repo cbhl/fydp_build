@@ -25,13 +25,13 @@ def build_log_stream():
         last_line = log_len-300;
     resp_str = ""
     if (last_line >= (log_len + 1)):
-         resp_str = "event: empty\nid: log_len-1\ndata: \n\n"
+         resp_str = "event: empty\nid: %d\ndata: \n\n" % (log_len-1)
     else:
         for n in range(last_line+1,log_len):
             # TODO(cbhl): filter out werkzeug events at the logger level
             if not "INFO:werkzeug:" in log[n]:
                 resp_str += "event: buildlog\nid: %d\ndata: %s\n\n" % (n, log[n].rstrip())
-        resp_str = "event: buildloganimate\nid: log_len-1\ndata: \n\n"
+        resp_str = "event: buildloganimate\nid: %d\ndata: \n\n" % (log_len-1)
     response = make_response(resp_str)
     response.headers['Content-Type'] = 'text/event-stream'
     return response

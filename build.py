@@ -25,7 +25,7 @@ def build_log_stream():
         last_line = log_len-300;
     resp_str = ""
     if (last_line >= (log_len + 1)):
-         resp_str = "\n"
+         resp_str = "event: empty\nid: log_len-1\ndata: \n\n"
     else:
         for n in range(last_line+1,log_len):
             # TODO(cbhl): filter out werkzeug events at the logger level

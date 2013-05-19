@@ -31,6 +31,8 @@ $(function() {
             $lineDiv = $('<div class="log-line">');
             $lineDiv.text(e.data);
             $logContentDiv.append($lineDiv);
+        });
+        source.addEventListener('buildloganimate', function(e) {
             $logDiv.animate({scrollTop: $logContentDiv.height()}, 500);
         });
         source.addEventListener('open', function(e) {

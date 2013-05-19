@@ -4,7 +4,7 @@ $(function() {
     $logDiv.append($logContentDiv);
     $("body").append($logDiv);
 
-    var resizeLog = function() {
+    var resizeLog = function(e) {
         $logDiv.css({
             position:'absolute',
             left: 50,
@@ -16,7 +16,7 @@ $(function() {
     }
 
     resizeLog();
-    $.on("resize", resizeLog);
+    $(window).on("resize", resizeLog);
 
     if (!!window.EventSource) {
         var source = new EventSource("/build_log_stream");

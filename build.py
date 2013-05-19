@@ -20,7 +20,7 @@ def build_log_stream():
     f = open("build.log", "r")
     log = f.readlines()
     log_len = len(log)
-    last_line = int(request['Last-Event-ID']) if 'Last-Event-ID' in request else -1
+    last_line = int(request.headers['Last-Event-ID']) if 'Last-Event-ID' in request.headers else -1
     resp_str = ""
     if (last_line >= (log_len + 1)):
          resp_str = "\n"

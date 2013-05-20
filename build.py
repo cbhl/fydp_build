@@ -55,7 +55,7 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "fakeroot make-kpkg --initrd --revision=%s kernel_image" % revision],
+            "make-kpkg --rootcmd fakeroot --jobs 4 --initrd --revision=%s kernel_image" % revision],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",

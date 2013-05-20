@@ -12,3 +12,9 @@ libpam0g-dev pkg-config python-dev swig
 6. git clone --depth 1 git://github.com/zmanji/ecryptfs\_userspace.git
 7. export PATH="/usr/lib/ccache:$PATH"
 8. python build.py
+
+# Random Notes
+
+1. Buildbot needs a reasonable amount of RAM (try 512 MB).
+2. ccache hits the disk a lot, use VirtIO instead of IDE emulation.
+

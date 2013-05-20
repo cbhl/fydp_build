@@ -1,7 +1,10 @@
 # Installation
 
-1. sudo aptitude install kernel-package build-essential virtualenv ccache bc \
-debhelper less dh-autoreconf git-buildpackage
+1. sudo aptitude install virtualenv ccache less \
+kernel-package build-essential bc \
+debhelper dh-autoreconf git-buildpackage \
+intltool libgcrypt11-dev libglib2.0-dev libkeyutils-dev libnss3-dev \
+libpam0g-dev pkg-config python-dev swig
 2. virtualenv --distribute ~/.virtualenv/fydp\_build/
 3. source ~/.virtualenv/fydp\_build/bin/activate
 4. pip install -r requirements.txt

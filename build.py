@@ -44,34 +44,38 @@ def build():
     logging.info("Starting build!")
     dt = datetime.datetime.today()
     snapshot = "%04d%02d%02d%02d" % (dt.year, dt.month, dt.day, dt.hour)
-    revision = "0cryptkeeper%s" % snapshot
+    revision = "1cryptkeeper0~%s" % snapshot
     commands = [
-## TODO(cbhl): Turn kernel build back on.
-#        ["/home/cryptkeeper/src/ecryptfs",
-#            "pwd"],
-#        ["/home/cryptkeeper/src/ecryptfs",
-#            "git pull"],
-#        ["/home/cryptkeeper/src/ecryptfs",
-#            "yes '' | make oldconfig"],
-## TODO(cbhl): Turn clean back on.
-##        ["/home/cryptkeeper/src/ecryptfs",
-##            "make-kpkg clean"],
-#        ["/home/cryptkeeper/src/ecryptfs",
-#            "fakeroot make-kpkg --initrd --revision=%s kernel_image" % revision],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "pwd"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "git pull"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "yes '' | make oldconfig"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "make-kpkg clean"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "fakeroot make-kpkg --initrd --revision=%s kernel_image" % revision],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git reset --hard origin/master"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "git clean -x -f"],
+            "git clean -d -x -f"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "git pull"],
+            "git checkout upstream"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "git-dch --auto --snapshot --snapshot-number %s" % snapshot],
+            "git pull origin upstream"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git checkout master"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git pull origin master"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git-dch --new-version 104-1cryptkeeper0 --auto --snapshot --snapshot-number %s" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "debuild -i.git -I.git -us -uc"],
+            'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
     ]
     for command in commands:
         logging.info("CHDIR: %s" % command[0])

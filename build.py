@@ -46,23 +46,24 @@ def build():
     snapshot = "%04d%02d%02d%02d" % (dt.year, dt.month, dt.day, dt.hour)
     revision = "0cryptkeeper%s" % snapshot
     commands = [
-        ["/home/cryptkeeper/src/ecryptfs",
-            "pwd"],
-        ["/home/cryptkeeper/src/ecryptfs",
-            "git pull"],
-        ["/home/cryptkeeper/src/ecryptfs",
-            "yes '' | make oldconfig"],
-# TODO(cbhl): Turn clean back on.
+## TODO(cbhl): Turn kernel build back on.
 #        ["/home/cryptkeeper/src/ecryptfs",
-#            "make-kpkg clean"],
-        ["/home/cryptkeeper/src/ecryptfs",
-            "fakeroot make-kpkg --initrd --revision=%s kernel_image" % revision],
+#            "pwd"],
+#        ["/home/cryptkeeper/src/ecryptfs",
+#            "git pull"],
+#        ["/home/cryptkeeper/src/ecryptfs",
+#            "yes '' | make oldconfig"],
+## TODO(cbhl): Turn clean back on.
+##        ["/home/cryptkeeper/src/ecryptfs",
+##            "make-kpkg clean"],
+#        ["/home/cryptkeeper/src/ecryptfs",
+#            "fakeroot make-kpkg --initrd --revision=%s kernel_image" % revision],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "pwd"],
-        ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "git clean -x -f"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git reset --hard origin/master"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git clean -x -f"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git pull"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
@@ -70,7 +71,7 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "git-buildpackage"],
+            "debuild -i.git -I.git -us -uc"],
     ]
     for command in commands:
         logging.info("CHDIR: %s" % command[0])

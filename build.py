@@ -43,7 +43,8 @@ def hello():
 def build():
     logging.info("Starting build!")
     dt = datetime.datetime.today()
-    revision = "0cryptkeeper%04d%02d%02d" % (dt.year, dt.month, dt.day)
+    snapshot = "%04d%02d%02d%02d" % (dt.year, dt.month, dt.day, dt.hour)
+    revision = "0cryptkeeper%s" % snapshot
     commands = [
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
@@ -59,14 +60,15 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git clean -x -f"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "git reset --hard origin/master"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git pull"],
-# TODO(cbhl): Turn clean back on.
-#        ["/home/cryptkeeper/src/ecryptfs_userspace",
-#            "debian/rules clean"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "debian/rules build"],
+            "git-dch --auto --snapshot --snapshot-number %s" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "git-dch --snapshot"],
+            "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git-buildpackage"],
     ]

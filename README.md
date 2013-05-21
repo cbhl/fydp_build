@@ -17,4 +17,5 @@ libpam0g-dev pkg-config python-dev swig
 
 1. Buildbot needs a reasonable amount of RAM (try 512 MB).
 2. ccache hits the disk a lot, use VirtIO instead of IDE emulation.
+3. echo 'sys.kernel.printk = 7 4 1 7' >> /etc/sysctl.conf && sudo sysctl -p
 

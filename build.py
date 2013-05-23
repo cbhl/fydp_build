@@ -22,8 +22,8 @@ def build_log_stream():
     log_len = len(log)
     last_line = int(request.headers['Last-Event-ID']) if 'Last-Event-ID' in request.headers else -1
     initial_req = 'Last-Event-ID' not in request.headers
-    if (log_len - last_line) > 300:
-        last_line = log_len-300;
+    if (log_len - last_line) > 1000:
+        last_line = log_len-1000;
     resp_str = ""
     if (last_line >= (log_len + 1)):
          resp_str = "event: empty\nid: %d\ndata: .\n\n" % (log_len-1)

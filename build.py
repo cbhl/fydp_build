@@ -45,7 +45,7 @@ def build():
     dt = datetime.datetime.today()
     snapshot = "%04d%02d%02d%02d" % (dt.year, dt.month, dt.day, dt.hour)
     revision = "1cryptkeeper0~%s" % snapshot
-    commands = [
+    build_full_kernel_task = [
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs",
@@ -56,6 +56,13 @@ def build():
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg --rootcmd fakeroot --jobs 4 --initrd --revision=%s kernel_image" % revision],
+        ]
+    build_incremental_kernel_task = [
+        # TODO(cbhl): STUB!
+        ["/home/cryptkeeper/src/ecryptfs",
+            "pwd"],
+        ]
+    build_userspace_task = [
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
@@ -76,25 +83,33 @@ def build():
             "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
+        ]
+    tasks = [
+        #build_full_kernel_task,
+        build_incremental_kernel_task,
+        #build_userspace_task,
     ]
-    for command in commands:
-        logging.info("CHDIR: %s" % command[0])
-        os.chdir(command[0])
-        logging.info("SHELL: %s" % command[1])
-        popen = subprocess.Popen(command[1],
-                                 shell=True, bufsize=4096, stdin=None,
-                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                 close_fds=True)
-        while True:
-            line = popen.stdout.readline()
-            if not line:
-                logging.info("GOT EMPTY LINE FROM PROCESS -- ASSUMING TERMINATION")
-                if popen.wait() != 0:
-                    logging.info("PROCESS TERMINATED WITH ERRORS")
-                else:
-                    logging.info("PROCESS ENDED NORMALLY")
-                break;
-            logging.info(line)
+    for task in tasks:
+        logging.info("TASK: START")
+        for command in task:
+            logging.info("CHDIR: %s" % command[0])
+            os.chdir(command[0])
+            logging.info("SHELL: %s" % command[1])
+            popen = subprocess.Popen(command[1],
+                                     shell=True, bufsize=4096, stdin=None,
+                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                     close_fds=True)
+            while True:
+                line = popen.stdout.readline()
+                if not line:
+                    logging.info("GOT EMPTY LINE FROM PROCESS -- ASSUMING TERMINATION")
+                    if popen.wait() != 0:
+                        logging.info("PROCESS TERMINATED WITH ERRORS")
+                    else:
+                        logging.info("PROCESS ENDED NORMALLY")
+                    break;
+                logging.info(line)
+        logging.info("TASK: COMPLETE")
     logging.info("Build complete!")
 
 if __name__ == "__main__":

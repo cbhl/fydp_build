@@ -21,6 +21,7 @@ def build_log_stream():
     log = f.readlines()
     log_len = len(log)
     last_line = int(request.headers['Last-Event-ID']) if 'Last-Event-ID' in request.headers else -1
+    initial_req = 'Last-Event-ID' not in request.headers
     if (log_len - last_line) > 300:
         last_line = log_len-300;
     resp_str = ""
@@ -31,7 +32,8 @@ def build_log_stream():
             # TODO(cbhl): filter out werkzeug events at the logger level
             if not "INFO:werkzeug:" in log[n]:
                 resp_str += "event: buildlog\nid: %d\ndata: %s\n\n" % (n, log[n].rstrip())
-        resp_str += "event: buildloganimate\nid: %d\ndata: .\n\n" % (log_len-1)
+        if initial_req:
+            resp_str += "event: buildloganimate\nid: %d\ndata: .\n\n" % (log_len-1)
     response = make_response(resp_str)
     response.headers['Content-Type'] = 'text/event-stream'
     return response

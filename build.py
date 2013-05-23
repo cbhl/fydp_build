@@ -53,8 +53,8 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "yes '' | make oldconfig"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "perl -pi -e 's/CONFIG_ECRYPT_FS=./CONFIG_ECRYPT_FS=m/' .config"
-        ["/home/cryptkeeper/src/ecryptfs"],
+            "perl -pi -e 's/CONFIG_ECRYPT_FS=./CONFIG_ECRYPT_FS=m/' .config"],
+        ["/home/cryptkeeper/src/ecryptfs",
             "grep CONFIG_ECRYPT_FS .config"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg clean"],
@@ -65,7 +65,7 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "perl -pi -e 's/CONFIG_ECRYPT_FS=./CONFIG_ECRYPT_FS=m/' .config"
+            "perl -pi -e 's/CONFIG_ECRYPT_FS=./CONFIG_ECRYPT_FS=m/' .config"],
         ["/home/cryptkeeper/src/ecryptfs",
             "grep CONFIG_ECRYPT_FS .config"],
         ["/home/cryptkeeper/src/ecryptfs",

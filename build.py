@@ -58,9 +58,12 @@ def build():
             "make-kpkg --rootcmd fakeroot --jobs 4 --initrd --revision=%s kernel_image" % revision],
         ]
     build_incremental_kernel_task = [
-        # TODO(cbhl): STUB!
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "make M=fs/ecryptfs"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "cp fs/ecryptfs/ecryptfs.ko ../ecryptfs.ko.%s" % revision],
         ]
     build_userspace_task = [
         ["/home/cryptkeeper/src/ecryptfs_userspace",

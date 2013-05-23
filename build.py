@@ -96,9 +96,9 @@ def build():
             'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
         ]
     tasks = [
-        #build_full_kernel_task,
+        build_userspace_task,
+        build_full_kernel_task,
         build_incremental_kernel_task,
-        #build_userspace_task,
     ]
     for task in tasks:
         logging.info("TASK: START")

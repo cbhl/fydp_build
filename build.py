@@ -53,6 +53,10 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "yes '' | make oldconfig"],
         ["/home/cryptkeeper/src/ecryptfs",
+            "perl -pi -e 's/CONFIG_ECRYPT_FS=./CONFIG_ECRYPT_FS=m/' .config"
+        ["/home/cryptkeeper/src/ecryptfs",
+            "grep CONFIG_ECRYPT_FS .config"],
+        ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg --rootcmd fakeroot --jobs 4 --initrd --revision=%s kernel_image" % revision],
@@ -60,6 +64,10 @@ def build():
     build_incremental_kernel_task = [
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
+        ["/home/cryptkeeper/src/ecryptfs",
+            "perl -pi -e 's/CONFIG_ECRYPT_FS=./CONFIG_ECRYPT_FS=m/' .config"
+        ["/home/cryptkeeper/src/ecryptfs",
+            "grep CONFIG_ECRYPT_FS .config"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make M=fs/ecryptfs"],
         ["/home/cryptkeeper/src/ecryptfs",

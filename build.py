@@ -115,6 +115,7 @@ def build():
     ]
     for task in tasks:
         logging.info("TASK: START")
+        start_time = datetime.datetime.utcnow()
         for command in task:
             if command[0] is None:
                DEFAULT_DIR = "/home/cryptkeeper/src" #TODO(cbhl): refactor to top
@@ -138,7 +139,10 @@ def build():
                         logging.info("PROCESS ENDED NORMALLY")
                     break;
                 logging.info(line)
+        end_time = datetime.datetime.utcnow()
         logging.info("TASK: COMPLETE")
+        delta = end_time - start_time
+        logging.info("Task took %s to run." % delta)
     logging.info("Build complete!")
 
 if __name__ == "__main__":

@@ -73,7 +73,7 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "make M=fs/ecryptfs"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "cp fs/ecryptfs/ecryptfs.ko ../ecryptfs.ko.%s" % revision],
+            "cp fs/ecryptfs/ecryptfs.ko ../ecryptfs.ko.%s" % snapshot],
         ]
     build_userspace_task = [
         ["/home/cryptkeeper/src/ecryptfs_userspace",

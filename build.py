@@ -109,7 +109,16 @@ def build():
         [None, "ssh cryptkeeper-test sudo mkdir /upper"],
         [None, "ssh cryptkeeper-test mkdir /tmp/image"],
         [None, "ssh cryptkeeper-test bash -c 'pwd; cd src/ecryptfs_userspace; "
-        "pwd; sudo tests/run_tests.sh -K -U -c safe,destructive -b 1000000 "
+        "pwd; sudo tests/run_tests.sh -K -c safe -b 1000000 "
+        "-D /tmp/image -l /lower -u /upper;'"],
+        [None, "ssh cryptkeeper-test bash -c 'pwd; cd src/ecryptfs_userspace; "
+        "pwd; sudo tests/run_tests.sh -U -c safe -b 1000000 "
+        "-D /tmp/image -l /lower -u /upper;'"],
+        [None, "ssh cryptkeeper-test bash -c 'pwd; cd src/ecryptfs_userspace; "
+        "pwd; sudo tests/run_tests.sh -K -c destructive -b 1000000 "
+        "-D /tmp/image -l /lower -u /upper;'"],
+        [None, "ssh cryptkeeper-test bash -c 'pwd; cd src/ecryptfs_userspace; "
+        "pwd; sudo tests/run_tests.sh -U -c destructive -b 1000000 "
         "-D /tmp/image -l /lower -u /upper;'"],
     ]
     tasks = [
@@ -130,6 +139,7 @@ def build():
                logging.info("CHDIR: %s" % command[0])
                os.chdir(command[0])
             logging.info("SHELL: %s" % command[1])
+            cmd_start_time = datetime.datetime.utcnow()
             popen = subprocess.Popen(command[1],
                                      shell=True, bufsize=4096, stdin=None,
                                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -138,6 +148,9 @@ def build():
                 line = popen.stdout.readline()
                 if not line:
                     logging.info("GOT EMPTY LINE FROM PROCESS -- ASSUMING TERMINATION")
+                    cmd_end_time = datetime.datetime.utcnow()
+                    cmd_delta = cmd_end_time - cmd_start_time
+                    logging.info("Command took %s to run." % cmd_delta)
                     if popen.wait() != 0:
                         logging.info("PROCESS TERMINATED WITH ERRORS")
                     else:

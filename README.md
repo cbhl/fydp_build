@@ -1,4 +1,10 @@
-# Installation
+# Installation on the test server
+
+1. sudo aptitude install debhelper autotools-dev autoconf automake \
+intltool libtool libgcrypt11-dev libglib2.0-dev libkeyutils-dev \
+libnss3-dev libpam0g-dev pkg-config python-dev swig acl ecryptfs-utils
+
+# Installation on the build server
 
 1. sudo aptitude install virtualenv ccache less \
 kernel-package build-essential bc \

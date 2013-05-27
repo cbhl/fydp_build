@@ -11,7 +11,8 @@ libpam0g-dev pkg-config python-dev swig
 5. git clone --depth 1 git://github.com/zmanji/ecryptfs.git
 6. git clone --depth 1 git://github.com/zmanji/ecryptfs\_userspace.git
 7. export PATH="/usr/lib/ccache:$PATH"
-8. python build.py
+8. ssh-keygen; ssh-copy-id cryptkeeper-test; ssh -N -o StrictHostKeyChecking=no cryptkeeper-test
+9. python build.py
 
 # Random Notes
 

@@ -105,7 +105,8 @@ def build():
         [None, "ssh cryptkeeper-test sudo mkdir /upper"],
         [None, "ssh cryptkeeper-test mkdir /tmp/image"],
         [None, "ssh cryptkeeper-test bash -c 'pwd; cd src/ecryptfs_userspace/tests; "
-        "pwd; ./run_tests.sh -h'"],
+        "pwd; sudo ./run_tests.sh -K -U -c safe,destructive -b 1000000 "
+        "-D /tmp/image -l /lower -u /upper;'"],
     ]
     tasks = [
 #        build_userspace_task,

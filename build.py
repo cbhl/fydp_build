@@ -97,16 +97,32 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
         ]
+    run_tests = [
+        [None, "ssh cryptkeeper-test mkdir -p src/ecryptfs_userspace/tests"],
+        [None, "rsync -arv /home/cryptkeeper/src/ecryptfs_userspace/tests/ "
+        "cryptkeeper-test:src/ecryptfs_userspace/tests/"],
+        [None, "ssh cryptkeeper-test sudo mkdir /lower"],
+        [None, "ssh cryptkeeper-test sudo mkdir /upper"],
+        [None, "ssh cryptkeeper-test mkdir /tmp/image"],
+        [None, "ssh cryptkeeper-test bash -c 'cd src/ecryptfs_userspace/tests; "
+        "./run_tests.sh -h'"],
+    ]
     tasks = [
-        build_userspace_task,
-        build_full_kernel_task,
-        build_incremental_kernel_task,
+#        build_userspace_task,
+#        build_full_kernel_task,
+#        build_incremental_kernel_task,
+        run_tests,
     ]
     for task in tasks:
         logging.info("TASK: START")
         for command in task:
-            logging.info("CHDIR: %s" % command[0])
-            os.chdir(command[0])
+            if command[0] is None:
+               DEFAULT_DIR = "/home/cryptkeeper/src" #TODO(cbhl): refactor to top
+               logging.info("CHDIR: %s" % DEFAULT_DIR)
+               os.chdir(DEFAULT_DIR)
+            else:
+               logging.info("CHDIR: %s" % command[0])
+               os.chdir(command[0])
             logging.info("SHELL: %s" % command[1])
             popen = subprocess.Popen(command[1],
                                      shell=True, bufsize=4096, stdin=None,

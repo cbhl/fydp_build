@@ -98,7 +98,11 @@ def build():
             'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
         ]
     run_tests = [
-        [None, "ssh cryptkeeper-test mkdir -p src/ecryptfs_userspace/tests"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "./configure --enable-tests --disable-pywrap"],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "make"],
+        [None, "ssh cryptkeeper-test mkdir -p src/ecryptfs_userspace"],
         [None, "rsync -arv /home/cryptkeeper/src/ecryptfs_userspace/ "
         "cryptkeeper-test:src/ecryptfs_userspace/"],
         [None, "ssh cryptkeeper-test sudo mkdir /lower"],

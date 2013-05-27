@@ -99,13 +99,13 @@ def build():
         ]
     run_tests = [
         [None, "ssh cryptkeeper-test mkdir -p src/ecryptfs_userspace/tests"],
-        [None, "rsync -arv /home/cryptkeeper/src/ecryptfs_userspace/tests/ "
-        "cryptkeeper-test:src/ecryptfs_userspace/tests/"],
+        [None, "rsync -arv /home/cryptkeeper/src/ecryptfs_userspace/ "
+        "cryptkeeper-test:src/ecryptfs_userspace/"],
         [None, "ssh cryptkeeper-test sudo mkdir /lower"],
         [None, "ssh cryptkeeper-test sudo mkdir /upper"],
         [None, "ssh cryptkeeper-test mkdir /tmp/image"],
-        [None, "ssh cryptkeeper-test bash -c 'pwd; cd src/ecryptfs_userspace/tests; "
-        "pwd; sudo ./run_tests.sh -K -U -c safe,destructive -b 1000000 "
+        [None, "ssh cryptkeeper-test bash -c 'pwd; cd src/ecryptfs_userspace; "
+        "pwd; sudo tests/run_tests.sh -K -U -c safe,destructive -b 1000000 "
         "-D /tmp/image -l /lower -u /upper;'"],
     ]
     tasks = [

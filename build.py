@@ -69,7 +69,7 @@ def build():
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo dpkg -i linux-image-3.9.0-rc2+_%s_amd64.deb" % revision],
         ["/home/cryptkeeper/src",
-            "ssh cryptkeeper-test sudo reboot" % revision],
+            "ssh cryptkeeper-test sudo reboot"],
         ]
     build_incremental_kernel_task = [
         ["/home/cryptkeeper/src/ecryptfs",

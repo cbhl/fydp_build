@@ -63,6 +63,14 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg --rootcmd fakeroot --jobs 4 --initrd --revision=%s kernel_image" % revision],
         ]
+    install_full_kernel_task = [
+        ["/home/cryptkeeper/src",
+            "scp linux-image-3.9.0-rc2+_%s_amd64.deb cryptkeeper-test:" % revision],
+        ["/home/cryptkeeper/src",
+            "ssh cryptkeeper-test sudo dpkg -i linux-image-3.9.0-rc2+_%s_amd64.deb" % revision],
+        ["/home/cryptkeeper/src",
+            "ssh cryptkeeper-test sudo reboot" % revision],
+        ]
     build_incremental_kernel_task = [
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
@@ -123,9 +131,10 @@ def build():
     ]
     tasks = [
 #        build_userspace_task,
-#        build_full_kernel_task,
+        build_full_kernel_task,
+        install_full_kernel_task,
 #        build_incremental_kernel_task,
-        run_tests,
+#        run_tests,
     ]
     for task in tasks:
         logging.info("TASK: START")

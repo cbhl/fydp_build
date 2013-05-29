@@ -91,7 +91,7 @@ def build_incremental_kernel_task(snapshot):
             "cp fs/ecryptfs/ecryptfs.ko ../ecryptfs.ko.%s" % snapshot],
         ]
 
-def install_incremental_kernel_task:
+def install_incremental_kernel_task(snapshot):
     return [
         ["/home/cryptkeeper/src",
             "scp ecryptfs.ko.%s cryptkeeper-test:" % snapshot],

@@ -24,6 +24,7 @@ def trigger_build():
         "run_tests": True,
     }
     queue.put(build, False)
+    return "OK"
 
 @app.route("/build_log_stream")
 def build_log_stream():
@@ -203,7 +204,7 @@ def build(q):
             tasks.append(build_userspace_task(snapshot))
             tasks.append(install_userspace_task(revision))
         if build["run_tests"]:
-            tasks.append(run_tests())
+            tasks.append(run_tests_task())
         logging.info("BUILD: START")
         for task in tasks:
             logging.info("TASK: START")

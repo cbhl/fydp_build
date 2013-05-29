@@ -83,6 +83,14 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "cp fs/ecryptfs/ecryptfs.ko ../ecryptfs.ko.%s" % snapshot],
         ]
+    install_incremental_kernel_task = [
+        ["/home/cryptkeeper/src",
+            "scp ecryptfs.ko.%s cryptkeeper-test:" % snapshot],
+        ["/home/cryptkeeper/src",
+            "ssh cryptkeeper-test sudo rmmod ecryptfs"],
+        ["/home/cryptkeeper/src",
+            "ssh cryptkeeper-test sudo insmod ecryptfs.ko.%s" % snapshot],
+        ]
     build_userspace_task = [
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "pwd"],
@@ -104,6 +112,24 @@ def build():
             "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
+        ]
+    install_userspace_task = [
+        # TODO(cbhl): Get the SHA and fill in the filename properly.
+        ["/home/cryptkeeper/src",
+            "scp ecryptfs-utils_104-%(rev)s.?????????_amd64.deb "
+            "ecryptfs-utils-dbg_104-%(rev)s.?????????_amd64.deb "
+            "libecryptfs0_104-%(rev)s.?????????_amd64.deb "
+            "libecryptfs-dev_104-%(rev)s.?????????_amd64.deb "
+            "python-ecryptfs_104-%(rev)s.?????????_amd64.deb cryptkeeper-test:"
+            % {"rev": revision}],
+        ["/home/cryptkeeper/src",
+            "ssh cryptkeeper-test sudo dpkg -i "
+            "ecryptfs-utils_104-%(rev)s.?????????_amd64.deb "
+            "ecryptfs-utils-dbg_104-%(rev)s.?????????_amd64.deb "
+            "libecryptfs0_104-%(rev)s.?????????_amd64.deb "
+            "libecryptfs-dev_104-%(rev)s.?????????_amd64.deb "
+            "python-ecryptfs_104-%(rev)s.?????????_amd64.deb"
+            % {"rev": revision}],
         ]
     run_tests = [
         ["/home/cryptkeeper/src/ecryptfs_userspace",
@@ -130,10 +156,12 @@ def build():
         "-D /tmp/image -l /lower -u /upper;'"],
     ]
     tasks = [
-#        build_userspace_task,
-        build_full_kernel_task,
-        install_full_kernel_task,
-#        build_incremental_kernel_task,
+        build_userspace_task,
+        install_userspace_task,
+#        build_full_kernel_task,
+#        install_full_kernel_task,
+        build_incremental_kernel_task,
+        install_incremental_kernel_task,
 #        run_tests,
     ]
     for task in tasks:

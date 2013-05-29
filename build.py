@@ -246,7 +246,7 @@ if __name__ == "__main__":
     logging.getLogger('').addHandler(console)
 
     queue = multiprocessing.Queue(1)
-    process = multiprocessing.Process(target=build, args=(queue))
+    process = multiprocessing.Process(target=build, args=({"q": queue}))
 
     process.start()
 

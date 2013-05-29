@@ -246,8 +246,10 @@ if __name__ == "__main__":
         filename='build.log',
         format='%(asctime)s:%(levelname)s:%(name)s: %(message)s',
         level=logging.DEBUG)
-    console = logging.StreamHandler(
-        format='%(asctime)s:%(levelname)s:%(name)s: %(message)s')
+    console = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: '
+        '%(message)s')
+    console.setFormatter(formatter)
     logging.getLogger('').addHandler(console)
 
     queue = multiprocessing.Queue(1)

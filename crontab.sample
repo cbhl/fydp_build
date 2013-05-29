@@ -1,0 +1,4 @@
+#
+# fydp_build
+#
+30 7 * * * cryptkeeper wget -O /dev/null -o /dev/null 'http://localhost:20349/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2'

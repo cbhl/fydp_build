@@ -177,8 +177,8 @@ def run_tests_task():
 
 def build():
     logging.info("Starting build!")
-    revision = get_revision()
-    snapshot = get_snapshot(revision)
+    snapshot = get_snapshot()
+    revision = get_revision(snapshot)
     tasks = [
         build_userspace_task(snapshot),
         install_userspace_task(revision),

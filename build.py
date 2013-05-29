@@ -42,12 +42,15 @@ def build_log_stream():
 def hello():
     return render_template("index.html")
 
-def build():
-    logging.info("Starting build!")
+def get_snapshot():
     dt = datetime.datetime.today()
-    snapshot = "%04d%02d%02d%02d" % (dt.year, dt.month, dt.day, dt.hour)
-    revision = "1cryptkeeper0~%s" % snapshot
-    build_full_kernel_task = [
+    return "%04d%02d%02d%02d" % (dt.year, dt.month, dt.day, dt.hour)
+
+def get_revision(snapshot):
+    return "1cryptkeeper0~%s" % snapshot
+
+def build_full_kernel_task(revision):
+   return [ 
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs",
@@ -63,7 +66,9 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg --rootcmd fakeroot --jobs 4 --initrd --revision=%s kernel_image" % revision],
         ]
-    install_full_kernel_task = [
+
+def install_full_kernel_task(revision):
+    return [
         ["/home/cryptkeeper/src",
             "scp linux-image-3.9.0-rc2+_%s_amd64.deb cryptkeeper-test:" % revision],
         ["/home/cryptkeeper/src",
@@ -71,7 +76,9 @@ def build():
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo reboot"],
         ]
-    build_incremental_kernel_task = [
+
+def build_incremental_kernel_task(snapshot):
+    return [
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs",
@@ -83,7 +90,9 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs",
             "cp fs/ecryptfs/ecryptfs.ko ../ecryptfs.ko.%s" % snapshot],
         ]
-    install_incremental_kernel_task = [
+
+def install_incremental_kernel_task:
+    return [
         ["/home/cryptkeeper/src",
             "scp ecryptfs.ko.%s cryptkeeper-test:" % snapshot],
         ["/home/cryptkeeper/src",
@@ -91,7 +100,9 @@ def build():
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo insmod ecryptfs.ko.%s" % snapshot],
         ]
-    build_userspace_task = [
+
+def build_userspace_task(snapshot):
+    return [
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
@@ -117,7 +128,9 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
         ]
-    install_userspace_task = [
+
+def install_userspace_task(revision):
+    return [
         # TODO(cbhl): Get the SHA and fill in the filename properly.
         ["/home/cryptkeeper/src",
             "scp ecryptfs-utils_104-%(rev)s.?????????_amd64.deb "
@@ -135,7 +148,9 @@ def build():
             "python-ecryptfs_104-%(rev)s.?????????_amd64.deb"
             % {"rev": revision}],
         ]
-    run_tests = [
+
+def run_tests_task():
+    return [
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "./configure --enable-tests --disable-pywrap"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
@@ -159,14 +174,19 @@ def build():
         "pwd; sudo tests/run_tests.sh -U -c destructive -b 1000000 "
         "-D /tmp/image -l /lower -u /upper;'"],
     ]
+
+def build():
+    logging.info("Starting build!")
+    revision = get_revision()
+    snapshot = get_snapshot(revision)
     tasks = [
-        build_userspace_task,
-        install_userspace_task,
-#        build_full_kernel_task,
-#        install_full_kernel_task,
-        build_incremental_kernel_task,
-        install_incremental_kernel_task,
-#        run_tests,
+        build_userspace_task(snapshot),
+        install_userspace_task(revision),
+#        build_full_kernel_task(revision),
+#        install_full_kernel_task(revision),
+        build_incremental_kernel_task(snapshot),
+        install_incremental_kernel_task(snapshot),
+#        run_tests(),
     ]
     for task in tasks:
         logging.info("TASK: START")

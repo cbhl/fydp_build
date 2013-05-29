@@ -16,7 +16,7 @@ queue = None
 log = []
 
 @app.route("/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2")
-@def trigger_build():
+def trigger_build():
     build = {
         "kernel_full": False,
         "kernel_incremental": True,

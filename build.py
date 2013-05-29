@@ -15,6 +15,16 @@ process = None
 queue = None
 log = []
 
+@app.route("/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2")
+@def trigger_build():
+    build = {
+        "kernel_full": False,
+        "kernel_incremental": True,
+        "userspace": True,
+        "run_tests": True,
+    }
+    queue.put(build, False)
+
 @app.route("/build_log_stream")
 def build_log_stream():
     f = open("build.log", "r")
@@ -175,61 +185,68 @@ def run_tests_task():
         "-D /tmp/image -l /lower -u /upper;'"],
     ]
 
-def build():
-    logging.info("Starting build!")
-    snapshot = get_snapshot()
-    revision = get_revision(snapshot)
-    tasks = [
-        build_userspace_task(snapshot),
-        install_userspace_task(revision),
-#        build_full_kernel_task(revision),
-#        install_full_kernel_task(revision),
-        build_incremental_kernel_task(snapshot),
-        install_incremental_kernel_task(snapshot),
-#        run_tests(),
-    ]
-    for task in tasks:
-        logging.info("TASK: START")
-        start_time = datetime.datetime.utcnow()
-        for command in task:
-            if command[0] is None:
-               DEFAULT_DIR = "/home/cryptkeeper/src" #TODO(cbhl): refactor to top
-               logging.info("CHDIR: %s" % DEFAULT_DIR)
-               os.chdir(DEFAULT_DIR)
-            else:
-               logging.info("CHDIR: %s" % command[0])
-               os.chdir(command[0])
-            logging.info("SHELL: %s" % command[1])
-            cmd_start_time = datetime.datetime.utcnow()
-            popen = subprocess.Popen(command[1],
-                                     shell=True, bufsize=4096, stdin=None,
-                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                     close_fds=True)
-            while True:
-                line = popen.stdout.readline()
-                if not line:
-                    logging.info("GOT EMPTY LINE FROM PROCESS -- ASSUMING TERMINATION")
-                    cmd_end_time = datetime.datetime.utcnow()
-                    cmd_delta = cmd_end_time - cmd_start_time
-                    logging.info("Command took %s to run." % cmd_delta)
-                    if popen.wait() != 0:
-                        logging.info("PROCESS TERMINATED WITH ERRORS")
-                    else:
-                        logging.info("PROCESS ENDED NORMALLY")
-                    break;
-                logging.info(line)
-        end_time = datetime.datetime.utcnow()
-        logging.info("TASK: COMPLETE")
-        delta = end_time - start_time
-        logging.info("Task took %s to run." % delta)
-    logging.info("Build complete!")
+def build(q):
+    logging.info("Starting build process...")
+    while True:
+        logging.info("Waiting for build trigger...")
+        build = q.get(True)
+        snapshot = get_snapshot()
+        revision = get_revision(snapshot)
+        tasks = []
+        if build["kernel_full"]:
+            tasks.append(build_full_kernel_task(revision))
+            tasks.append(install_full_kernel_task(revision))
+        if build["kernel_incremental"]:
+            tasks.append(build_incremental_kernel_task(snapshot))
+            tasks.append(install_incremental_kernel_task(snapshot))
+        if build["userspace"]:
+            tasks.append(build_userspace_task(snapshot))
+            tasks.append(install_userspace_task(revision))
+        if build["run_tests"]:
+            tasks.append(run_tests())
+        logging.info("BUILD: START")
+        for task in tasks:
+            logging.info("TASK: START")
+            start_time = datetime.datetime.utcnow()
+            for command in task:
+                if command[0] is None:
+                   DEFAULT_DIR = "/home/cryptkeeper/src" #TODO(cbhl): refactor to top
+                   logging.info("CWD: %s" % DEFAULT_DIR)
+                   os.chdir(DEFAULT_DIR)
+                else:
+                   logging.info("CWD: %s" % command[0])
+                   os.chdir(command[0])
+                logging.info("SHELL: %s" % command[1])
+                cmd_start_time = datetime.datetime.utcnow()
+                popen = subprocess.Popen(command[1],
+                                         shell=True, bufsize=4096, stdin=None,
+                                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                         close_fds=True)
+                while True:
+                    line = popen.stdout.readline()
+                    if not line:
+                        cmd_end_time = datetime.datetime.utcnow()
+                        cmd_delta = cmd_end_time - cmd_start_time
+                        logging.info("SHELL: TIME %s" % cmd_delta)
+                        if popen.wait() != 0:
+                            logging.info("SHELL: TERMINATED WITH ERRORS")
+                        else:
+                            logging.info("SHELL: TERMINATED NORMALLY")
+                        break;
+                    logging.info(line)
+            end_time = datetime.datetime.utcnow()
+            logging.info("TASK: COMPLETE")
+            delta = end_time - start_time
+            logging.info("TASK: TIME %s" % delta)
+        logging.info("BUILD: COMPLETE")
 
 if __name__ == "__main__":
     logging.basicConfig(filename='build.log',level=logging.DEBUG)
     console = logging.StreamHandler()
     logging.getLogger('').addHandler(console)
 
-    process = multiprocessing.Process(target=build, args=())
+    queue = multiprocessing.Queue(1)
+    process = multiprocessing.Process(target=build, args=(queue))
 
     process.start()
 

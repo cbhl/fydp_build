@@ -109,6 +109,8 @@ def build():
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git-dch --new-version 104-1cryptkeeper0 --auto --snapshot --snapshot-number %s" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
+            "dpkg-source --auto-commit --single-debian-patch -b ."],
+        ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],

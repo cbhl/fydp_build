@@ -242,7 +242,10 @@ def build(q):
         logging.info("BUILD: COMPLETE")
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='build.log',level=logging.DEBUG)
+    logging.basicConfig(
+        filename='build.log',
+        format='%(asctime)s:%(levelname)s:%(name)s: %(message)s',
+        level=logging.DEBUG)
     console = logging.StreamHandler()
     logging.getLogger('').addHandler(console)
 

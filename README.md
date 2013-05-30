@@ -19,7 +19,10 @@ libpam0g-dev pkg-config python-dev swig
 6. git clone --depth 1 git://github.com/zmanji/ecryptfs\_userspace.git
 7. export PATH="/usr/lib/ccache:$PATH"
 8. ssh-keygen; ssh-copy-id cryptkeeper-test; ssh -N -o StrictHostKeyChecking=no cryptkeeper-test
-9. python build.py
+9. git config --global user.name "Team CryptKeeper Build Bot"
+10. git config --global user.email "cryptkeeper@cryptkeeper-build.kvm.myazuresky.com"
+11. gpg --gen-key
+12. python build.py
 
 # Random Notes
 

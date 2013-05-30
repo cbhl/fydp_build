@@ -129,7 +129,7 @@ def build_userspace_task(snapshot):
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git pull origin master"],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            "git-dch --new-version 104-1cryptkeeper0 --auto --snapshot --snapshot-number %s" % snapshot],
+            "git-dch --new-version 104-1cryptkeeper0 --auto --snapshot --snapshot-number %s --git-author" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace/debian/source",
             "echo 'auto-commit' >> options"],
         ["/home/cryptkeeper/src/ecryptfs_userspace/debian/source",
@@ -137,7 +137,7 @@ def build_userspace_task(snapshot):
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            'git-buildpackage --git-upstream-tree=branch --git-builder="debuild -i\\.git -I.git -us -uc"'],
+            'git-buildpackage --git-upstream-tree=branch -b"'],
         ]
 
 def install_userspace_task(revision):

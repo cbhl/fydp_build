@@ -137,7 +137,7 @@ def build_userspace_task(snapshot):
         ["/home/cryptkeeper/src/ecryptfs_userspace",
             "git commit -a -m 'Update debian/changelog (snapshot %s).'" % snapshot],
         ["/home/cryptkeeper/src/ecryptfs_userspace",
-            'git-buildpackage --git-upstream-tree=branch -b"'],
+            'git-buildpackage --git-upstream-tree=branch -b'],
         ]
 
 def install_userspace_task(revision):

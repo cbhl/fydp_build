@@ -86,6 +86,9 @@ def install_full_kernel_task(revision):
             "ssh cryptkeeper-test sudo dpkg -i linux-image-3.9.0-rc2+_%s_amd64.deb" % revision],
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo reboot"],
+        # FIXME Actually wait for it to come back up
+        ["/home/cryptkeeper/src",
+            "sleep 60"],
         ]
 
 def build_incremental_kernel_task(snapshot):

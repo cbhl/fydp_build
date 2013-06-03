@@ -18,8 +18,8 @@ log = []
 @app.route("/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2")
 def trigger_build():
     build = {
-        "kernel_full": False,
-        "kernel_incremental": True,
+        "kernel_full": True,
+        "kernel_incremental": False,
         "userspace": True,
         "run_tests": True,
     }

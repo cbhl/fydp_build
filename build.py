@@ -60,7 +60,7 @@ def get_snapshot():
 def get_revision(snapshot):
     return "1cryptkeeper0~%s" % snapshot
 
-def build_full_kernel_task(revision):
+def build_full_kernel_task(snapshot, revision):
    return [ 
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
@@ -75,7 +75,10 @@ def build_full_kernel_task(revision):
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "make-kpkg --rootcmd fakeroot --jobs 4 --initrd --revision=%s kernel_image" % revision],
+            "make-kpkg --rootcmd fakeroot --jobs 4 --initrd " +
+            "--append-to-version=%s --revision=%s kernel_image" % (
+                snapshot, revision
+            )],
         ]
 
 def install_full_kernel_task(revision):
@@ -198,7 +201,7 @@ def build(q):
         revision = get_revision(snapshot)
         tasks = []
         if build["kernel_full"]:
-            tasks.append(build_full_kernel_task(revision))
+            tasks.append(build_full_kernel_task(snapshot, revision))
             tasks.append(install_full_kernel_task(revision))
         if build["kernel_incremental"]:
             tasks.append(build_incremental_kernel_task(snapshot))

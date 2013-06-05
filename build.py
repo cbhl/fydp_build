@@ -204,7 +204,7 @@ def build(q):
         tasks = []
         if build["kernel_full"]:
             tasks.append(build_full_kernel_task(snapshot, revision))
-            tasks.append(install_full_kernel_task(revision))
+            tasks.append(install_full_kernel_task(snapshot, revision))
         if build["kernel_incremental"]:
             tasks.append(build_incremental_kernel_task(snapshot))
             tasks.append(install_incremental_kernel_task(snapshot))

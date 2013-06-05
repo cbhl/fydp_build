@@ -76,17 +76,19 @@ def build_full_kernel_task(snapshot, revision):
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg --rootcmd fakeroot --jobs 4 --initrd " +
-            "--append-to-version=%s --revision=%s kernel_image" % (
+            "--append-to-version=%s --revision=-%s kernel_image" % (
                 snapshot, revision
             )],
         ]
 
-def install_full_kernel_task(revision):
+def install_full_kernel_task(snapshot, revision):
     return [
         ["/home/cryptkeeper/src",
-            "scp linux-image-3.9.0-rc2+_%s_amd64.deb cryptkeeper-test:" % revision],
+            "scp linux-image-3.9.0-rc2-%s+_%s_amd64.deb cryptkeeper-test:" %
+            (snapshot, revision)],
         ["/home/cryptkeeper/src",
-            "ssh cryptkeeper-test sudo dpkg -i linux-image-3.9.0-rc2+_%s_amd64.deb" % revision],
+            "ssh cryptkeeper-test sudo dpkg -i
+            linux-image-3.9.0-rc2-%s+_%s_amd64.deb" % (snapshot,revision)],
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo reboot"],
         # FIXME Actually wait for it to come back up

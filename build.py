@@ -87,8 +87,8 @@ def install_full_kernel_task(snapshot, revision):
             "scp linux-image-3.9.0-rc2-%s+_%s_amd64.deb cryptkeeper-test:" %
             (snapshot, revision)],
         ["/home/cryptkeeper/src",
-            "ssh cryptkeeper-test sudo dpkg -i
-            linux-image-3.9.0-rc2-%s+_%s_amd64.deb" % (snapshot,revision)],
+            "ssh cryptkeeper-test sudo dpkg -i " +
+            "linux-image-3.9.0-rc2-%s+_%s_amd64.deb" % (snapshot,revision)],
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo reboot"],
         # FIXME Actually wait for it to come back up

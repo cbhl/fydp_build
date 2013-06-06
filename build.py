@@ -9,6 +9,7 @@ from flask import Flask
 from flask import make_response
 from flask import request
 from flask import render_template
+
 app = Flask(__name__)
 
 process = None
@@ -17,14 +18,12 @@ log = []
 
 @app.route("/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2")
 def trigger_build():
-    build = {
-        "kernel_full": True,
-        "kernel_incremental": False,
-        "userspace": True,
-        "run_tests": True,
-    }
+    build = {}
+
+    for flag in ["kernel_full", "kernel_incremental", "userspace", "run_tests"]:
+        build[flag] = request.args[flag] if flag in request.args else False
     queue.put(build, False)
-    return "OK"
+    return json.dumps(build)
 
 @app.route("/build_log_stream")
 def build_log_stream():

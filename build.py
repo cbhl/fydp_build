@@ -281,7 +281,7 @@ def build(q):
                     if line:
                       logging.info(line)
                       if build["run_tests"]:
-                          for (test_name, regex) in test_pass_re.iterkeys():
+                          for test_name, regex in test_pass_re.iterkeys():
                               if regex.match(line):
                                   test_results[test_name] = True
                           if line == "0 failed":

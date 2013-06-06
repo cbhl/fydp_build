@@ -7,10 +7,10 @@ $(function() {
     var resizeLog = function(e) {
         $logDiv.css({
             position:'absolute',
-            left: 50,
-            top: 50,
-            width: $(window).width() - 100,
-            height: $(window).height() -100,
+            left: 0,
+            top: 0,
+            width: $(window).width(),
+            height: $(window).height(),
             overflow: 'scroll'
         });
     }

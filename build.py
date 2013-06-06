@@ -6,6 +6,8 @@ import os
 import re
 import subprocess
 
+from crossdomain import crossdomain
+
 from flask import Flask
 from flask import make_response
 from flask import request
@@ -20,6 +22,7 @@ queue = None
 log = []
 
 @app.route("/status.json")
+@crossdomain(origin='*')
 def status():
     result = {}
     r = redis.StrictRedis(

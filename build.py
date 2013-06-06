@@ -3,6 +3,7 @@ import json
 import logging
 import multiprocessing
 import os
+import re
 import subprocess
 
 from flask import Flask
@@ -10,11 +11,29 @@ from flask import make_response
 from flask import request
 from flask import render_template
 
+import redis
+
 app = Flask(__name__)
 
 process = None
 queue = None
 log = []
+
+@app.route("/status.json")
+def status():
+    result = {}
+    r = redis.StrictRedis(
+        host='cryptkeeper-build.kvm.myazuresky.com',
+        port=6379,
+        db=0
+        )
+
+    result['last-build'] = r.get('last-build')
+    result['last-build-duration'] = r.get('last-build-duration')
+    result['test-results'] = json.loads(r.get('test-results'))
+    result['tests_pass'] = r.get('tests-pass')
+
+    return json.dumps(result)
 
 @app.route("/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2")
 def trigger_build():
@@ -194,10 +213,31 @@ def run_tests_task():
     ]
 
 def build(q):
+    # TODO(cbhl): parse these from the repo
+    test_names = [
+        "miscdev-bad-count", "extend-file-random", "trunc-file",
+        "directory-concurrent", "file-concurrent", "lp-994247", "ecb-mount",
+        "llseek", "lp-469664", "lp-524919", "lp-509180", "lp-613873",
+        "lp-745836", "lp-870326", "lp-885744", "lp-926292", "inotify",
+        "mmap-bmap", "mmap-close", "mmap-dir", "read-dir",
+        "setattr-flush-dirty", "inode-race-stat", "lp-1009207", "enospc",
+        "lp-911507", "lp-872905", "lp-561129", "mknod", "link", "xattr",
+        "verify-passphrase-sig", "wrap-unwrap"
+    ]
+    test_pass_re = {
+        test_name: re.compile("%s\s+pass$" % test_name) for test_name in test_names
+    }
+    r = redis.StrictRedis(
+        host='cryptkeeper-build.kvm.myazuresky.com',
+        port=6379,
+        db=0
+        )
     logging.info("Starting build process...")
     while True:
         logging.info("Waiting for build trigger...")
         build = q.get(True)
+        start_build_time = datetime.datetime.utcnow()
+        r.set('last-build', start_build_time.isoformat())
         snapshot = get_snapshot()
         revision = get_revision(snapshot)
         tasks = []
@@ -213,6 +253,11 @@ def build(q):
         if build["run_tests"]:
             tasks.append(run_tests_task())
         logging.info("BUILD: START")
+        test_results = {
+            test_name: False for test_name in test_names
+        }
+        tests_pass = False
+        zero_failed_count = 0
         for task in tasks:
             logging.info("TASK: START")
             start_time = datetime.datetime.utcnow()
@@ -232,7 +277,19 @@ def build(q):
                                          close_fds=True)
                 while True:
                     line = popen.stdout.readline()
-                    if not line:
+                    if line:
+                      logging.info(line)
+                      if build["run_tests"]:
+                          for (test_name, regex) in test_pass_re.iterkeys():
+                              if regex.match(line):
+                                  test_results[test_name] = True
+                          if line == "0 failed":
+                              zero_failed_count += 1
+                              logging.info("RUN_TESTS: THEY ALL PASSED! EXCELLENT.
+                              [%d/4]" % zero_failed_count)
+                              if zero_failed_count == 4:
+                                  tests_pass = True
+                    else line:
                         cmd_end_time = datetime.datetime.utcnow()
                         cmd_delta = cmd_end_time - cmd_start_time
                         logging.info("SHELL: TIME %s" % cmd_delta)
@@ -241,11 +298,16 @@ def build(q):
                         else:
                             logging.info("SHELL: TERMINATED NORMALLY")
                         break;
-                    logging.info(line)
             end_time = datetime.datetime.utcnow()
             logging.info("TASK: COMPLETE")
             delta = end_time - start_time
             logging.info("TASK: TIME %s" % delta)
+        end_build_time = datetime.datetime.utcnow()
+        r.set('last-build-duration',
+            (end_build_time-start_build_time).total_seconds())
+        if build["run_tests"]:
+            r.set('test-results', json.dumps(test_results))
+            r.set('tests-pass', tests_pass)
         logging.info("BUILD: COMPLETE")
 
 if __name__ == "__main__":

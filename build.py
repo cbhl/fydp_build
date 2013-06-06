@@ -28,11 +28,11 @@ def status():
         db=0
         )
 
-    result['last-build'] = r.get('last-build') || False
-    result['last-build-duration'] = r.get('last-build-duration') || False
+    result['last-build'] = r.get('last-build') or False
+    result['last-build-duration'] = r.get('last-build-duration') or False
     test_results_json = r.get('test-results')
     result['test-results'] = json.loads(test_results_json) if test_results_json else {}
-    result['tests_pass'] = r.get('tests-pass') || False
+    result['tests_pass'] = r.get('tests-pass') or False
 
     return json.dumps(result)
 

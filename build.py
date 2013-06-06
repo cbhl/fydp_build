@@ -257,6 +257,9 @@ def build(q):
         if build["run_tests"]:
             tasks.append(run_tests_task())
         logging.info("BUILD: START")
+        if build["run_tests"]:
+            r.set('test-results', json.dumps({"build-in-progress": True}))
+            r.delete('tests-pass')
         test_results = {
             test_name: False for test_name in test_names
         }

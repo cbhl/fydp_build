@@ -30,7 +30,8 @@ def status():
 
     result['last-build'] = r.get('last-build')
     result['last-build-duration'] = r.get('last-build-duration')
-    result['test-results'] = json.loads(r.get('test-results'))
+    test_results_json = r.get('test-results')
+    result['test-results'] = json.loads(test_results_json) if test_results_json else None
     result['tests_pass'] = r.get('tests-pass')
 
     return json.dumps(result)

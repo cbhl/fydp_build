@@ -29,7 +29,7 @@ def status():
         )
 
     result['last_build'] = r.get('last-build')
-    result['last_build-duration'] = r.get('last-build-duration')
+    result['last_build_duration'] = r.get('last-build-duration')
     test_results_json = r.get('test-results')
     result['test_results'] = json.loads(test_results_json) if test_results_json else {}
     result['tests_pass'] = r.get('tests-pass') or False

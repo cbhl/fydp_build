@@ -289,7 +289,7 @@ def build(q):
                                   "EXCELLENT. [%d/4]" % zero_failed_count)
                               if zero_failed_count == 4:
                                   tests_pass = True
-                    else line:
+                    else:
                         cmd_end_time = datetime.datetime.utcnow()
                         cmd_delta = cmd_end_time - cmd_start_time
                         logging.info("SHELL: TIME %s" % cmd_delta)

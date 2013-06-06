@@ -12,17 +12,20 @@ kernel-package build-essential bc \
 debhelper dh-autoreconf git-buildpackage \
 intltool libgcrypt11-dev libglib2.0-dev libkeyutils-dev libnss3-dev \
 libpam0g-dev pkg-config python-dev swig
-2. virtualenv --distribute ~/.virtualenv/fydp\_build/
-3. source ~/.virtualenv/fydp\_build/bin/activate
-4. pip install -r requirements.txt
-5. git clone --depth 1 git://github.com/zmanji/ecryptfs.git
-6. git clone --depth 1 git://github.com/zmanji/ecryptfs\_userspace.git
-7. export PATH="/usr/lib/ccache:$PATH"
-8. ssh-keygen; ssh-copy-id cryptkeeper-test; ssh -N -o StrictHostKeyChecking=no cryptkeeper-test
-9. git config --global user.name "Team CryptKeeper Build Bot"
-10. git config --global user.email "cryptkeeper@cryptkeeper-build.kvm.myazuresky.com"
-11. gpg --gen-key
-12. python build.py
+2. sudo aptitude install python-software-properties # to add redis PPA
+3. sudo add-apt-repository ppa:rwky/redis # for redis-server
+4. sudo aptitude install redis-server
+5. virtualenv --distribute ~/.virtualenv/fydp\_build/
+6. source ~/.virtualenv/fydp\_build/bin/activate
+7. pip install -r requirements.txt
+8. git clone --depth 1 git://github.com/zmanji/ecryptfs.git
+9. git clone --depth 1 git://github.com/zmanji/ecryptfs\_userspace.git
+10. export PATH="/usr/lib/ccache:$PATH"
+11. ssh-keygen; ssh-copy-id cryptkeeper-test; ssh -N -o StrictHostKeyChecking=no cryptkeeper-test
+12. git config --global user.name "Team CryptKeeper Build Bot"
+13. git config --global user.email "cryptkeeper@cryptkeeper-build.kvm.myazuresky.com"
+14. gpg --gen-key
+15. python build.py
 
 # Random Notes
 

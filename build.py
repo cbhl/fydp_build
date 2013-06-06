@@ -285,8 +285,8 @@ def build(q):
                                   test_results[test_name] = True
                           if line == "0 failed":
                               zero_failed_count += 1
-                              logging.info("RUN_TESTS: THEY ALL PASSED! EXCELLENT.
-                              [%d/4]" % zero_failed_count)
+                              logging.info("RUN_TESTS: THEY ALL PASSED!" +
+                                  "EXCELLENT. [%d/4]" % zero_failed_count)
                               if zero_failed_count == 4:
                                   tests_pass = True
                     else line:

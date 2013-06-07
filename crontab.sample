@@ -1,5 +1,5 @@
 #
 # fydp_build
 #
-0 13 * * 6 cryptkeeper wget -O /dev/null -o /dev/null 'http://localhost:20349/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2kernel_full=true&kernel_incremental=false&userspace=true&run_tests=true'
-0 13 * * 0-5 cryptkeeper wget -O /dev/null -o /dev/null 'http://localhost:20349/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2kernel_full=false&kernel_incremental=true&userspace=true&run_tests=true'
+0 13 * * 6 cryptkeeper wget -O /dev/null -o /dev/null 'http://localhost:20349/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2?kernel_full=true&kernel_incremental=false&userspace=true&run_tests=true'
+0 13 * * 0-5 cryptkeeper wget -O /dev/null -o /dev/null 'http://localhost:20349/trigger_build/lgkmGKfwyArYkONrLYo7bI7RgefbQRh2?kernel_full=false&kernel_incremental=true&userspace=true&run_tests=true'

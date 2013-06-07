@@ -290,7 +290,7 @@ def build(q):
                           for test_name, regex in test_pass_re.iteritems():
                               if regex.match(line):
                                   test_results[test_name] = True
-                          if line == "0 failed":
+                          if re.match("0\s+failed", line):
                               zero_failed_count += 1
                               logging.info("RUN_TESTS: THEY ALL PASSED!" +
                                   "EXCELLENT. [%d/4]" % zero_failed_count)

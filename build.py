@@ -92,9 +92,9 @@ def build_full_kernel_task(snapshot, revision):
             "git clean -d -x -f"],
         # TODO(cbhl): we need a proper dev branch to track
         ["/home/cryptkeeper/src/ecryptfs",
-            "git checkout headers-2"],
+            "git checkout master"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "git pull origin headers-2"],
+            "git pull origin master"],
         ["/home/cryptkeeper/src/ecryptfs",
             "yes '' | make oldconfig"],
         ["/home/cryptkeeper/src/ecryptfs",

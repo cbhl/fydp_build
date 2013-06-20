@@ -105,7 +105,7 @@ def build_full_kernel_task(snapshot, revision):
             "make-kpkg clean"],
         ["/home/cryptkeeper/src/ecryptfs",
             "make-kpkg --rootcmd fakeroot --jobs 4 --initrd " +
-            "--append-to-version=%s --revision=-%s kernel_image" % (
+            "--append-to-version=%s --revision=%s kernel_image" % (
                 snapshot, revision
             )],
         ]

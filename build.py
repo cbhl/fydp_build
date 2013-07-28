@@ -87,14 +87,14 @@ def build_full_kernel_task(snapshot, revision):
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "git reset --hard origin/tmp-test"],
+            "git reset --hard origin/dev"],
         ["/home/cryptkeeper/src/ecryptfs",
             "git clean -d -x -f"],
         # TODO(cbhl): we need a proper dev branch to track
         ["/home/cryptkeeper/src/ecryptfs",
-            "git checkout tmp-test"],
+            "git checkout dev"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "git pull origin tmp-test"],
+            "git pull origin dev"],
         ["/home/cryptkeeper/src/ecryptfs",
             "yes '' | make oldconfig"],
         ["/home/cryptkeeper/src/ecryptfs",
@@ -113,11 +113,11 @@ def build_full_kernel_task(snapshot, revision):
 def install_full_kernel_task(snapshot, revision):
     return [
         ["/home/cryptkeeper/src",
-            "scp linux-image-3.9.0-rc2-%s+_%s_amd64.deb cryptkeeper-test:" %
+            "scp linux-image-3.10.0-rc4%s+_%s_amd64.deb cryptkeeper-test:" %
             (snapshot, revision)],
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo dpkg -i " +
-            "linux-image-3.9.0-rc2-%s+_%s_amd64.deb" % (snapshot,revision)],
+            "linux-image-3.10.0-rc4%s+_%s_amd64.deb" % (snapshot,revision)],
         ["/home/cryptkeeper/src",
             "ssh cryptkeeper-test sudo reboot"],
         # FIXME Actually wait for it to come back up
@@ -130,7 +130,7 @@ def build_incremental_kernel_task(snapshot):
         ["/home/cryptkeeper/src/ecryptfs",
             "pwd"],
         ["/home/cryptkeeper/src/ecryptfs",
-            "git pull origin tmp-test"],
+            "git pull origin dev"],
         ["/home/cryptkeeper/src/ecryptfs",
             "perl -pi -e 's/CONFIG_ECRYPT_FS=./CONFIG_ECRYPT_FS=m/' .config"],
         ["/home/cryptkeeper/src/ecryptfs",

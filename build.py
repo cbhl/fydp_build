@@ -35,7 +35,7 @@ def status():
     result['last_build_duration'] = r.get('last-build-duration')
     test_results_json = r.get('test-results')
     result['test_results'] = json.loads(test_results_json) if test_results_json else {}
-    result['tests_pass'] = True if r.get('tests-pass') else False
+    result['tests_pass'] = True if r.get('tests-pass') == "True" else False
 
     return json.dumps(result)
 
@@ -323,7 +323,7 @@ def build(q):
             (end_build_time-start_build_time).total_seconds())
         if build["run_tests"]:
             r.set('test-results', json.dumps(test_results))
-            r.set('tests-pass', 1 if tests_pass else 0)
+            r.set('tests-pass', tests_pass)
         logging.info("BUILD: COMPLETE")
 
 if __name__ == "__main__":
